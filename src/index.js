@@ -9,10 +9,9 @@ const webpack = require('./webpack');
 const fs = require('fs');
 const path = require('path');
 
+const args = require('./arguments');
 const { parseSections } = require('./data');
 const { writeTemplateFile } = require('./templates');
-
-const OUTPUT_DIR = 'report';
 
 main();
 
@@ -26,20 +25,20 @@ async function main() {
     unsafeCleanup: true
   });
 
-  debug('Creating output directory');
-  fs.mkdirSync(OUTPUT_DIR);
+  debug(`Creating output directory ${args.outDir}`);
+  fs.mkdirSync(args.outDir);
 
   const data = loadData();
 
   debug('Writing template files');
-  writeTemplateFile('index.html.hbs', path.resolve(OUTPUT_DIR, 'index.html'));
+  writeTemplateFile('index.html.hbs', path.resolve(args.outDir, 'index.html'));
   writeTemplateFile('index.js.hbs', path.resolve(tmpObj.name, 'index.js'));
   writeTemplateFile('data.js.hbs', path.resolve(tmpObj.name, 'data.js'), {
     generatedTime: Date.now(),
     data: JSON.stringify(data)
   });
 
-  webpack.build(OUTPUT_DIR, tmpObj.name, (err, stats) => {
+  webpack.build(args.outDir, tmpObj.name, (err, stats) => {
     spinner.stop();
 
     const info = stats.toJson();
@@ -54,12 +53,12 @@ async function main() {
 
     tmpObj.removeCallback();
 
-    opn(path.resolve(OUTPUT_DIR, 'index.html'), { wait: false });
+    opn(path.resolve(args.outDir, 'index.html'), { wait: false });
   });
 }
 
 function loadData() {
-  const filename = process.argv[2];
+  const filename = args.args[0];
   debug(`Loading profiling data: ${filename}`);
 
   const data = fs.readFileSync(filename, 'utf-8');

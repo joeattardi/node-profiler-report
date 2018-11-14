@@ -17,6 +17,7 @@
     "@babel/preset-env": "^7.1.5",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.4",
+    "commander": "^2.19.0",
     "css-loader": "^1.0.1",
     "debug": "^4.1.0",
     "handlebars": "^4.0.12",
