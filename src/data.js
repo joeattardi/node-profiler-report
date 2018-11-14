@@ -20,6 +20,7 @@ exports.parseSections = function parseSections(content) {
       currentSection = match[1];
 
       if (whitelist.includes(currentSection)) { // new section found
+        debug(`Found new section: "${currentSection}"`);
         sections[currentSection] = [];
         return;
       }

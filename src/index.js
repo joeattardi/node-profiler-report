@@ -1,18 +1,16 @@
 #! /usr/bin/env node
 
 const debug = require('debug')('profiler-report');
-const handlebars = require('handlebars');
 const opn = require('opn');
 const ora = require('ora');
 const tmp = require('tmp');
-const webpack = require('webpack');
+const webpack = require('./webpack');
 
 const fs = require('fs');
 const path = require('path');
 
 const { parseSections } = require('./data');
-
-const TEMPLATES_DIR = 'templates';
+const { writeTemplateFile } = require('./templates');
 
 const OUTPUT_DIR = 'report';
 
@@ -41,55 +39,7 @@ async function main() {
     data: JSON.stringify(data)
   });
 
-  debug('Copying components');
-
-  const compiler = webpack({
-    context: path.resolve(__dirname, '..'),
-    entry: path.resolve(tmpObj.name, 'index.js'),
-    output: {
-      path: path.resolve(OUTPUT_DIR),
-      publicPath: '/',
-      filename: 'bundle.js'
-    },
-    resolve: {
-      alias: {
-        components: path.resolve(__dirname, '..', 'components'),
-        data: path.resolve(tmpObj.name, 'data')
-      },
-      extensions: ['.js', '.jsx'],
-      modules: [
-        path.resolve(__dirname, '..', 'node_modules')
-      ]
-    },
-    module: {
-      rules: [
-        {
-          test: /\.(js|jsx)$/,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              cwd: path.resolve(__dirname, '..'),
-              presets: [
-                '@babel/preset-env',
-                '@babel/preset-react'
-              ]
-            }
-          }
-        },
-        {
-          test: /\.css/,
-          use: [
-            { loader: 'style-loader' },
-            { loader: 'css-loader' }
-          ]
-        }
-      ]
-    }
-  });
-
-  debug('Running webpack build');
-  compiler.run((err, stats) => {
+  webpack.build(OUTPUT_DIR, tmpObj.name, (err, stats) => {
     spinner.stop();
 
     const info = stats.toJson();
@@ -114,14 +64,4 @@ function loadData() {
 
   const data = fs.readFileSync(filename, 'utf-8');
   return parseSections(data);
-}
-
-function writeTemplateFile(srcFile, destFile, context = {}) {
-  debug(`Preparing template: ${srcFile}`);
-  const templateSrc = fs.readFileSync(path.resolve(__dirname, '..', TEMPLATES_DIR, srcFile), 'utf-8');
-  const template = handlebars.compile(templateSrc);
-  debug(`Executing template: ${srcFile}`);
-  const output = template(context);
-  debug(`Writing file: ${destFile}`);
-  fs.writeFileSync(destFile, output, 'utf-8');
 }
