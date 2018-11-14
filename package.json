@@ -1,6 +1,6 @@
 {
   "name": "profiler-report",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Generates an interactive HTML report from node's profiler data",
   "main": "index.js",
   "bin": {
