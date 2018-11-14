@@ -1,16 +1,17 @@
 {
   "name": "profiler-report",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0",
+  "description": "Generates an interactive HTML report from node's profiler data",
   "main": "index.js",
   "bin": {
     "profiler-report": "src/index.js"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "author": "Joe Attardi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joeattardi/node-profiler-report.git"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@babel/core": "^7.1.5",
     "@babel/preset-env": "^7.1.5",
