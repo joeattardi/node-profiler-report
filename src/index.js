@@ -16,6 +16,8 @@ const { writeTemplateFile } = require('./templates');
 main();
 
 async function main() {
+  const startTime = Date.now();
+
   const spinner = ora().start();
 
   debug('Creating temporary directory');
@@ -25,9 +27,19 @@ async function main() {
     unsafeCleanup: true
   });
 
-  debug(`Creating output directory ${args.outDir}`);
-  fs.mkdirSync(args.outDir);
+  debug(`Creating output directory "${args.outDir}"`);
+  try {
+    fs.mkdirSync(args.outDir);
+  } catch (err) {
+    if (err.code === 'EEXIST') {
+      debug(`Output directory "${args.outDir}" already exists`);
+    } else {
+      process.stderr.write(`Error: ${err.message}\n`);
+      process.exit(1);
+    }
+  }
 
+  spinner.text = 'Loading profiling data';
   const data = loadData();
 
   debug('Writing template files');
@@ -38,20 +50,22 @@ async function main() {
     data: JSON.stringify(data)
   });
 
+  spinner.text = 'Generating output';
   webpack.build(args.outDir, tmpObj.name, (err, stats) => {
     spinner.stop();
 
     const info = stats.toJson();
 
     if (err) {
-      console.log('Error:', err);
+      process.stderr.write(`Error: ${err}\n`);
     } else if (stats.hasErrors()) {
-      console.log('Error:', info.errors[0]);
-    } else {
-      console.log('Done');
+      process.stderr.write(`Error: ${info.errors[0]}\n`);
     }
 
     tmpObj.removeCallback();
+
+    const endTime = Date.now();
+    process.stdout.write(`Done in ${(endTime - startTime) / 1000} sec.\n`);
 
     opn(path.resolve(args.outDir, 'index.html'), { wait: false });
   });
