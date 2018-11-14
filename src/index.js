@@ -2,6 +2,7 @@
 
 const debug = require('debug')('profiler-report');
 const handlebars = require('handlebars');
+const opn = require('opn');
 const ora = require('ora');
 const tmp = require('tmp');
 const webpack = require('webpack');
@@ -102,6 +103,8 @@ async function main() {
     }
 
     tmpObj.removeCallback();
+
+    opn(path.resolve(OUTPUT_DIR, 'index.html'), { wait: false });
   });
 }
 
