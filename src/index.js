@@ -31,7 +31,7 @@ async function main() {
     tmpObj.removeCallback();
 
     const endTime = Date.now();
-    process.stdout.write(`Done in ${(endTime - startTime) / 1000} sec.`);
+    process.stdout.write(`Done in ${(endTime - startTime) / 1000} sec.\n`);
 
     opn(path.resolve(args.outDir, 'index.html'), { wait: false });
   } catch (err) {

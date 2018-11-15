@@ -1,9 +1,12 @@
 import React from 'react';
+import { MemoryRouter, Route, NavLink } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 
 import { data, generatedTime } from 'data';
+
 import Header from './Header';
-import Summary from './Summary';
+import Nav from './Nav';
+import DataSection from './DataSection';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -15,14 +18,44 @@ const GlobalStyle = createGlobalStyle`
 const Main = styled.main`
   padding: 1em;
   color: gray;
+  flex-grow: 1;
 `;
 
+const Body = styled.div`
+  display: flex;
+  flex-grow: 1;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
+
+const sections = Object.keys(data);
+sections.sort((a, b) => {
+  if (a === 'Summary') {
+    return -1;
+  } else if (b === 'Summary') {
+    return 1;
+  } else {
+    return a.localeCompare(b);
+  }
+});
+
 export default () => (
-  <React.Fragment>
-    <GlobalStyle />
-    <Header generatedTime={generatedTime.toString()} />
-    <Main>
-      <Summary summary={data.Summary} />
-    </Main>
-  </React.Fragment>
+  <MemoryRouter initialEntries={[`/data/${sections[0]}`]}>
+    <React.Fragment>
+      <GlobalStyle />
+      <Wrapper>
+        <Header generatedTime={generatedTime.toString()} />
+        <Body>
+          <Nav keys={sections} />
+          <Main>
+            <Route path="/data/:name" component={DataSection} />
+          </Main>
+        </Body>
+      </Wrapper>
+    </React.Fragment>
+  </MemoryRouter>
 );

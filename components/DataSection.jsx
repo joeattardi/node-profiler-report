@@ -3,11 +3,13 @@ import React from 'react';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
-export default ({ summary }) => (
+import { data } from 'data';
+
+export default ({ match }) => (
   <div>
-    <h2>Summary</h2>
+    <h2>{match.params.name}</h2>
     <ReactTable
-      data={summary}
+      data={data[match.params.name]}
       minRows={0}
       columns={[
         {
