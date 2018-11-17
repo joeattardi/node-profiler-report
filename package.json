@@ -11,6 +11,7 @@
     "type": "git",
     "url": "https://github.com/joeattardi/node-profiler-report.git"
   },
+  "keywords": ["profiler", "report", "table"],
   "license": "MIT",
   "dependencies": {
     "@babel/core": "^7.1.5",
