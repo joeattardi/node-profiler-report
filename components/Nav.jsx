@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
-const Nav = styled.nav`
+const StyledNav = styled.nav`
   padding: 1em;
   background: #988b76;
 `;
@@ -28,10 +28,13 @@ const StyledLink = styled(NavLink)`
   }
 `;
 
-export default ({ keys }) => (
-  <Nav>
+const Nav = ({ keys }) => (
+  <StyledNav>
     {keys.map(key => (
-      <StyledLink to={`/data/${key}`}>{key}</StyledLink>
+      <StyledLink key={key} to={`/data/${key}`}>{key}</StyledLink>
     ))}
-  </Nav>
+    <StyledLink to="/rawData">Raw data</StyledLink>
+  </StyledNav>
 );
+
+export default Nav;

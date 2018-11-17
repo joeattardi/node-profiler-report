@@ -3,8 +3,10 @@ const { resolve } = require('path');
 const debug = require('debug')('profiler-report:webpack');
 const webpack = require('webpack');
 
-exports.build = function build(outputDir, tmpDir, callback) {
+exports.build = function build(outputDir, tmpDir, environment, callback) {
   const compiler = webpack({
+    mode: environment,
+    devtool: environment === 'development' ? 'eval-source-map' : false,
     context: resolve(__dirname, '..'),
     entry: resolve(tmpDir, 'index.js'),
     output: {

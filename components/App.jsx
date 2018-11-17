@@ -7,6 +7,7 @@ import { data, generatedTime } from 'data';
 import Header from './Header';
 import Nav from './Nav';
 import DataSection from './DataSection';
+import RawData from './RawData';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -19,6 +20,7 @@ const Main = styled.main`
   padding: 1em;
   color: gray;
   flex-grow: 1;
+  overflow-y: scroll;
 `;
 
 const Body = styled.div`
@@ -43,7 +45,7 @@ sections.sort((a, b) => {
   }
 });
 
-export default () => (
+const App = () => (
   <MemoryRouter initialEntries={[`/data/${sections[0]}`]}>
     <React.Fragment>
       <GlobalStyle />
@@ -53,9 +55,12 @@ export default () => (
           <Nav keys={sections} />
           <Main>
             <Route path="/data/:name" component={DataSection} />
+            <Route path="/rawData" component={RawData} />
           </Main>
         </Body>
       </Wrapper>
     </React.Fragment>
   </MemoryRouter>
 );
+
+export default App;

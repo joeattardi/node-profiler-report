@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Header = styled.header`
+const StyledHeader = styled.header`
   background: #604D2D;
   color: #FFFFFF;
   padding: 0.5em;
@@ -11,9 +11,11 @@ const Header = styled.header`
   }
 `;
 
-export default ({ generatedTime }) => (
-  <Header>
+const Header = ({ generatedTime }) => (
+  <StyledHeader>
     <h1>Profiler Report</h1>
     <div>Generated {generatedTime}</div>
-  </Header>
+  </StyledHeader>
 );
+
+export default Header;

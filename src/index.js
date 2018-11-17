@@ -24,10 +24,11 @@ async function main() {
     initSignalHandling();
     createOutputDirectory();
 
-    const data = loadData(spinner);
+    const rawData = loadData(spinner);
+    const data = parseSections(rawData);
 
-    writeTemplateFiles(args.outDir, tmpObj.name, data);
-    await buildOutput(spinner, args.outDir, tmpObj.name);
+    writeTemplateFiles(args.outDir, tmpObj.name, rawData, data);
+    await buildOutput(spinner, args.outDir, tmpObj.name, args.environment);
 
     const endTime = Date.now();
     process.stdout.write(`Done in ${(endTime - startTime) / 1000} sec.\n`);
@@ -46,10 +47,10 @@ function initSignalHandling() {
   });
 }
 
-function buildOutput(spinner, outDir, tmpDir) {
+function buildOutput(spinner, outDir, tmpDir, environment) {
   return new Promise((resolve, reject) => {
     spinner.text = 'Generating output';
-    webpack.build(outDir, tmpDir, (err, stats) => {
+    webpack.build(outDir, tmpDir, environment, (err, stats) => {
       spinner.stop();
 
       const info = stats.toJson();
@@ -65,13 +66,14 @@ function buildOutput(spinner, outDir, tmpDir) {
   });
 }
 
-function writeTemplateFiles(outDir, tmpDir, data) {
+function writeTemplateFiles(outDir, tmpDir, rawData, data) {
   debug('Writing template files');
   writeTemplateFile('index.html.hbs', path.resolve(outDir, 'index.html'));
   writeTemplateFile('index.js.hbs', path.resolve(tmpDir, 'index.js'));
   writeTemplateFile('data.js.hbs', path.resolve(tmpDir, 'data.js'), {
     generatedTime: Date.now(),
-    data: JSON.stringify(data)
+    data: JSON.stringify(data),
+    rawData: JSON.stringify(rawData)
   });
 }
 
@@ -105,6 +107,5 @@ function loadData(spinner) {
   const filename = args.args[0];
   debug(`Loading profiling data: ${filename}`);
 
-  const data = fs.readFileSync(filename, 'utf-8');
-  return parseSections(data);
+  return fs.readFileSync(filename, 'utf-8');
 }

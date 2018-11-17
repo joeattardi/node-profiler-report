@@ -5,7 +5,7 @@ import 'react-table/react-table.css';
 
 import { data } from 'data';
 
-export default ({ match }) => (
+const DataSection = ({ match }) => (
   <div>
     <h2>{match.params.name}</h2>
     <ReactTable
@@ -47,3 +47,5 @@ export default ({ match }) => (
 function percentFormatter(data) {
   return <span>{data.value}%</span>;
 }
+
+export default DataSection;
