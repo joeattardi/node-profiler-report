@@ -24,4 +24,4 @@ Finally, generate the report:
 
     profiler-report processed.txt
 
-This will take a few seconds. When it's done, there will be a new directory called `report`. Inside that directory is an `index.html` file. Open this file in your browser to see the report.
+This will take a few seconds. When it's done, there will be a new directory called `report`. Inside that directory is an `index.html` file. The report will automatically be opened in your default browser.
