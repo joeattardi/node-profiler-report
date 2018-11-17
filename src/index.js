@@ -21,14 +21,13 @@ async function main() {
 
   try {
     const tmpObj = createTemporaryDirectory();
+    initSignalHandling();
     createOutputDirectory();
 
     const data = loadData(spinner);
 
     writeTemplateFiles(args.outDir, tmpObj.name, data);
     await buildOutput(spinner, args.outDir, tmpObj.name);
-
-    tmpObj.removeCallback();
 
     const endTime = Date.now();
     process.stdout.write(`Done in ${(endTime - startTime) / 1000} sec.\n`);
@@ -38,6 +37,13 @@ async function main() {
     process.stderr.write(`Error: ${err}\n`);
     process.exit(1);
   }
+}
+
+function initSignalHandling() {
+  process.on('SIGINT', () => {
+    process.stdout.write('\nAborted\n');
+    process.exit(1);
+  });
 }
 
 function buildOutput(spinner, outDir, tmpDir) {
