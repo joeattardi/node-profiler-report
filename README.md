@@ -2,6 +2,8 @@
 
 This package will generate an HTML report from the data processed by Node's profiler.
 
+![Screenshot](https://raw.githubusercontent.com/joeattardi/node-profiler-report/master/screenshot.png)
+
 ## Getting Started
 
 ### Install the package
